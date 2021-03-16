@@ -5,6 +5,6 @@
 
 int main(){
 	printf("Current PID: %d \n", (int)getpid());
-	printf("Parrent PID: %d \n", (int)getppid());
+	printf("Parent PID: %d \n", (int)getppid());
 	return 0;
 }

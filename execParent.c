@@ -4,9 +4,8 @@
 #include <unistd.h>
 
 int main(){
-	char *args[]={"./execChild", NULL};
+	char *args[]={"./c", NULL};
 	printf("Current PID: %d \n", (int)getpid());
-	printf("Parrent PID: %d \n", (int)getppid());
 	execvp(args[0],args);
 	return 0;	
 }

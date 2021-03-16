@@ -11,12 +11,12 @@ int main(){
 	switch (pid=fork()){
 		case 0:
 			printf("Current PID: %d \n", (int)getpid());
-			printf("Parrent PID: %d \n", (int)getppid());
+			printf("Parent PID: %d \n", (int)getppid());
 			exit(ex);
 			break;
 		default:
 			printf("Current PID: %d \n", (int)getpid());
-			printf("Parrent PID: %d \n", (int)getppid());
+			printf("Parent PID: %d \n", (int)getppid());
 			wait(0);
 		       	break;
 	}
