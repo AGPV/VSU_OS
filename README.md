@@ -10,5 +10,5 @@ gcc -o s selfcopy.c && ./s
 
 Третье задание: 
 ```
-gcc -o с execChild.c && gcc -o p execParent.c && ./p
+gcc -o c execChild.c && gcc -o p execParent.c && ./p
 ```
