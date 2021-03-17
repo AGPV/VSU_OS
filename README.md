@@ -1,14 +1,11 @@
-Первое задание:
+Запуск приёмника:
 ```
-gcc -o f getProcessID.c && ./f
-```
-
-Второе задание: 
-```
-gcc -o s selfcopy.c && ./s
+gcc -o r reciever.c && ./r
 ```
 
-Третье задание: 
+Отправка сигнала: 
 ```
-gcc -o c execChild.c && gcc -o p execParent.c && ./p
+gcc -o e emitter.c && ./e <PID> <sig>
 ```
+* PID - ID процесса приёмника
+* SIGNAL - SIGUSR1 или SIGUSR2

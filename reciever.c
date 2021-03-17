@@ -20,7 +20,7 @@ int main() {
 	signal(SIGUSR1, hdl);
 	signal(SIGUSR2, hdl);
 	while (1) {
-		printf("%s", str);
+		printf("PID: %d and %s", (int)getpid(), str);
 		sleep(1);
 	}
 	return 0;
