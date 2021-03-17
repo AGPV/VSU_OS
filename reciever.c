@@ -1,3 +1,6 @@
+/*Бесконечно выводит строку "Waiting for signal \n"
+  и ожидает сигналов SIGUSR1 и SIGUSR2.
+  При получении каждого из сигналов меняет выводимую строку.*/
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>

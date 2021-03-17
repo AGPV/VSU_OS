@@ -1,3 +1,4 @@
+/*Отправляет сигнал SIGUSR1 или SIGUSR2 процессу, который выбирается по идентефикатору*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
