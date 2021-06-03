@@ -1,25 +1,100 @@
-/*Отправляет сигнал SIGUSR1 или SIGUSR2 процессу, который выбирается по идентефикатору*/
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <signal.h>
+#include <stdio.h>
+#include <sys/msg.h>
+#include <sys/wait.h>
 #include <string.h>
 
-int main(int argc, char *argv[]){
-	if (argc == 3){
-		if ((strcmp(argv[2], "SIGUSR1") == 0) || (strcmp(argv[2], "SIGUSR2") == 0)){
-			int pid = atoi(argv[1]);
-			if (strcmp(argv[2], "SIGUSR1") == 0){
-				kill(pid, SIGUSR1);
-				printf("Signal send \n");
-			} else if (strcmp(argv[2], "SIGUSR2") == 0) {
-				kill(pid, SIGUSR2);
-				printf("Signal send \n");
-			}
-		} else {
-			printf("Argument error \n");
-		}
-	} else {
-		printf("Argument error \n");
-	}
+struct message {
+  long mtype;
+  double x;
+  double y;
+  char operation;
+};
+
+double calculate(double x, double y, char operation)
+{
+  double res;
+  switch (operation) {
+    case '+': {
+        res = x + y;
+        break;
+    } 
+    case '-': {
+        res = x - y;
+        break;
+    }
+    case '/': {
+        if (y != 0) {
+        res = x / y;
+        } else {
+        res = 0;
+        }
+        break;
+    }
+    case '*': {
+        res = x * y;
+        break;
+    }
+    case '^': {
+        res = 1;
+        for (int i = 0; i < y; i++)
+        res = res * x; 
+        break;
+    }
+    case '!': {
+        res = 1;
+        if (y >= 0)
+        for (int i = y; i != 1; i--)
+            res = res * i; 
+        else
+        res = 0;
+        break;
+    }
+  }
+  return res;
+}
+
+int main(void)
+{
+  int msqid = msgget(IPC_PRIVATE, IPC_CREAT | 0600);
+  if (msqid == -1) {
+    perror("msgget");
+    return EXIT_FAILURE;
+  }
+  pid_t pid = fork();
+  if (pid == 0) {
+    double x, y;
+    char operation;
+    struct message message;
+    message.mtype = 23;
+    memset(&(message.x), 0, sizeof(double));
+    memset(&(message.y), 0, sizeof(double));
+    memset(&(message.operation), 0, sizeof(char));
+    printf("Input a first number: ");
+    scanf("%lf", &(message.x));
+    printf("Input a second number: ");
+    scanf("%lf", &(message.y));
+    printf("Input an operation: ");
+    scanf(" %c", &operation);
+    (void)strcpy(&(message.operation), &operation);
+    if (msgsnd(msqid, &message, sizeof(struct message), 0) == -1) {
+      perror("msgsnd");
+
+      return EXIT_FAILURE;
+    }
+  } else {
+    (void)waitpid(pid, NULL, 0);
+    struct message message;
+    if (msgrcv(msqid, &message, sizeof(struct message), 0, 0) == -1) {
+      perror("msgrcv");
+      return EXIT_FAILURE;
+    }
+    printf("%.2lf %c %.2lf = %.2lf\n", message.x, message.operation, message.y, calculate(message.x, message.y, message.operation));
+    if (msgctl(msqid, IPC_RMID, NULL) == -1) {
+      perror("msgctl");
+      return EXIT_FAILURE;
+    }
+  }
+  return EXIT_SUCCESS;
 }
